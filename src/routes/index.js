@@ -1,38 +1,28 @@
+import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-
-const ROUTES_CONFIG = [
-  {
-    id: "page_1",
-    path: "/",
-    component: <div>Home</div>,
-    exact: true,
-  },
-  {
-    id: "page_2",
-    path: "/signup",
-    component: <div>Signup</div>,
-    exact: true,
-  },
-  {
-    id: "page_3",
-    path: "/dashboard",
-    component: <div>Dashboard</div>,
-    exact: true,
-  },
-];
+import { ROUTES_CONFIG } from "./config";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AllRoutes = (props) => {
   return (
-    <Routes>
-      {ROUTES_CONFIG.map((item) => (
-        <Route
-          key={item.id}
-          path={item.path}
-          element={item.component}
-          exact={item.exact}
-        />
-      ))}
-    </Routes>
+    <Suspense fallback={<p>loading.....</p>}>
+      <Routes>
+        {ROUTES_CONFIG.map((item) => (
+          <Route
+            key={item.id}
+            path={item.path}
+            exact={item.exact}
+            element={
+              <ProtectedRoute
+                children={item.component}
+                check={item.authGuard}
+                redirectTo={item.redirect}
+              />
+            }
+          />
+        ))}
+      </Routes>
+    </Suspense>
   );
 };
 

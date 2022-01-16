@@ -5,9 +5,11 @@ import {
   MenuItem,
   Toolbar,
   Typography,
+  Link,
 } from "@mui/material";
 import { useState } from "react";
 import { Menu as MenuIcon, AccountCircle } from "@mui/icons-material";
+import { Link as RouterLink } from "react-router-dom";
 
 const Header = (props) => {
   const [auth, setAuth] = useState(true);
@@ -24,6 +26,7 @@ const Header = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -36,8 +39,15 @@ const Header = (props) => {
         >
           <MenuIcon />
         </IconButton>
+
         <Typography variant="h6" component="h6" sx={{ flexGrow: 1 }}>
-          Kanban Board
+          <Link
+            component={RouterLink}
+            to="/"
+            sx={{ color: (theme) => theme.palette.primary.contrastText }}
+          >
+            Kanban Board
+          </Link>
         </Typography>
 
         <div>

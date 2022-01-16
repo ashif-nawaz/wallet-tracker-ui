@@ -1,10 +1,10 @@
 import Header from "./Header";
 
-const Layout = ({ childern }) => {
+const Layout = ({ children }) => {
   return (
     <>
       <Header />
-      <main>{childern}</main>
+      <main>{children}</main>
     </>
   );
 };
