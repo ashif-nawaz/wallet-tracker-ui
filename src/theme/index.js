@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material";
+import { createTheme, responsiveFontSizes } from "@mui/material";
 
 const defaultTheme = createTheme({
   typography: {
@@ -26,7 +26,7 @@ const defaultTheme = createTheme({
 
 const { breakpoints, palette } = defaultTheme;
 
-const theme = {
+let theme = {
   ...defaultTheme,
   overrides: {
     MuiButton: {
@@ -172,5 +172,7 @@ const theme = {
     },
   },
 };
+
+theme = responsiveFontSizes(theme);
 
 export default theme;

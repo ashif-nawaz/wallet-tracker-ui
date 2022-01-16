@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 const INITIAL_VALUES = {
-  email: "",
-  password: "",
+  email: "test@test.com",
+  password: "Test@123",
 };
 
 const VALIDATION_SCHEMA = Yup.object({

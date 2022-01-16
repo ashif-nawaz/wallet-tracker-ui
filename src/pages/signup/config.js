@@ -3,11 +3,11 @@ const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const INITIAL_VALUES = {
-  name: "",
-  username: "",
-  email: "",
-  number: "",
-  password: "",
+  name: "Ashif Nawaz",
+  username: "ashif",
+  email: "test@test.com",
+  number: "9876543210",
+  password: "Test@123",
 };
 
 const VALIDATION_SCHEMA = Yup.object({
