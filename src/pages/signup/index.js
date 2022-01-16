@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthSlice, removemessage, signup } from "../../store/auth";
 import { INITIAL_VALUES, VALIDATION_SCHEMA } from "./config";
-import { use } from "react-router-dom";
 
 const Signup = (props) => {
   const dispatch = useDispatch();
@@ -164,7 +163,6 @@ const Signup = (props) => {
                     }
                   />
                 </Grid>
-                <Grid item xs={12}></Grid>
               </Grid>
               <Button
                 type="submit"

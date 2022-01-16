@@ -1,10 +1,13 @@
+import { Box } from "@mui/material";
 import Header from "./Header";
 
 const Layout = ({ children }) => {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <Box component="main" mt={3}>
+        {children}
+      </Box>
     </>
   );
 };

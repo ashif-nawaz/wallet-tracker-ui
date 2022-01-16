@@ -45,8 +45,9 @@ const Header = (props) => {
             component={RouterLink}
             to="/"
             sx={{ color: (theme) => theme.palette.primary.contrastText }}
+            underline="none"
           >
-            Kanban Board
+            Kanban
           </Link>
         </Typography>
 
