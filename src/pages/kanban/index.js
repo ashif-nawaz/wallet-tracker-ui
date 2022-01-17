@@ -1,17 +1,28 @@
-import { Grid, Box, Container, Typography, Paper } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Button,
+  Modal,
+  Chip,
+} from "@mui/material";
 import {
   ArrowBackIos as ArrowBackIosIcon,
   ArrowForwardIos as ArrowForwardIosIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import React from "react";
+import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { getKanbanSlice, updateColumn, onItemAction } from "../../store/kanban";
 import { COLUMN_COLOR_ENUM } from "../dashboard/config";
+import AddTask from "./AddTask";
 
 const Kanban = (props) => {
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const { columns } = useSelector(getKanbanSlice);
 
@@ -20,18 +31,25 @@ const Kanban = (props) => {
     dispatch(updateColumn(result));
   };
 
-  const handleActions = (columnId, item, type) => {
-    dispatch(onItemAction({ type, columnId, item }));
+  const handleActions = (columnId, stage, item, type) => {
+    dispatch(onItemAction({ type, columnId, stage, item }));
+  };
+
+  const handleCreateTaskModalToggle = () => {
+    setOpen((state) => !state);
   };
 
   return (
     <Container maxWidth="xl">
-      <Grid
-        container
-        spacing={2}
-        justifyContent="space-around"
-        alignItems="center"
+      <Button
+        variant="contained"
+        sx={{ margin: "2rem auto", display: "block" }}
+        onClick={handleCreateTaskModalToggle}
       >
+        Create Task
+      </Button>
+
+      <Grid container spacing={2} justifyContent="space-around">
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
@@ -86,9 +104,27 @@ const Kanban = (props) => {
                                         margin: "0 0 8px 0",
                                       }}
                                     >
-                                      <Typography component="p" variant="body1">
-                                        {item.content}
-                                      </Typography>
+                                      <Box
+                                        component="div"
+                                        sx={{
+                                          display: "flex",
+                                          justifyContent: "space-between",
+                                          mb: 2,
+                                        }}
+                                      >
+                                        <Typography
+                                          component="p"
+                                          variant="body1"
+                                        >
+                                          {item.content}
+                                        </Typography>
+
+                                        <Chip
+                                          label={item.priority.toUpperCase()}
+                                          size="small"
+                                          color="info"
+                                        />
+                                      </Box>
                                       <Box
                                         component="div"
                                         sx={{
@@ -103,6 +139,7 @@ const Kanban = (props) => {
                                             onClick={(e) =>
                                               handleActions(
                                                 columnId,
+                                                column.stage,
                                                 item,
                                                 "BACK"
                                               )
@@ -117,6 +154,7 @@ const Kanban = (props) => {
                                             onClick={(e) =>
                                               handleActions(
                                                 columnId,
+                                                column.stage,
                                                 item,
                                                 "FORWARD"
                                               )
@@ -129,6 +167,7 @@ const Kanban = (props) => {
                                           onClick={(e) =>
                                             handleActions(
                                               columnId,
+                                              column.stage,
                                               item,
                                               "EDIT"
                                             )
@@ -140,6 +179,7 @@ const Kanban = (props) => {
                                           onClick={(e) =>
                                             handleActions(
                                               columnId,
+                                              column.stage,
                                               item,
                                               "DELETE"
                                             )
@@ -163,6 +203,29 @@ const Kanban = (props) => {
           })}
         </DragDropContext>
       </Grid>
+
+      <Modal
+        open={open}
+        onClose={handleCreateTaskModalToggle}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            minWidth: 400,
+            bgcolor: "background.paper",
+            border: "1px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <AddTask toggleModal={handleCreateTaskModalToggle} />
+        </Box>
+      </Modal>
     </Container>
   );
 };

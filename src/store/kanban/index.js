@@ -9,28 +9,73 @@ import { v4 as uuid } from "uuid";
  *
  */
 
+const navigateTaskItem = (state, columnId, item, targetStage) => {
+  const sourceColumn = state.columns[columnId];
+  const itemIndex = sourceColumn.items.findIndex(
+    (task, index) => task.id === item.id
+  );
+  sourceColumn.items.splice(itemIndex, 1);
+  let destinationColumnId;
+  for (const [columnId, column] of Object.entries(state.columns)) {
+    if (column.stage === targetStage) {
+      destinationColumnId = columnId;
+      break;
+    }
+  }
+  state.columns[destinationColumnId].items.unshift(item);
+};
+
 const INTIAL_ITEMS = [
-  { id: uuid(), content: "First task" },
-  { id: uuid(), content: "Second task" },
-  { id: uuid(), content: "Third task" },
-  { id: uuid(), content: "Fourth task" },
-  { id: uuid(), content: "Fifth task" },
+  {
+    id: uuid(),
+    content: "First task",
+    deadline: new Date("2022-08-18T21:11:54").toISOString(),
+    priority: "high",
+  },
+  {
+    id: uuid(),
+    content: "Second task",
+    deadline: new Date("2022-08-18T21:11:54").toISOString(),
+    priority: "medium",
+  },
+  {
+    id: uuid(),
+    content: "Third task",
+    deadline: new Date("2022-08-18T21:11:54").toISOString(),
+    priority: "medium",
+  },
+  {
+    id: uuid(),
+    content: "Fourth task",
+    deadline: new Date("2022-08-18T21:11:54").toISOString(),
+    priority: "high",
+  },
+  {
+    id: uuid(),
+    content: "Fifth task",
+    deadline: new Date("2022-08-18T21:11:54").toISOString(),
+    priority: "low",
+  },
 ];
 
 const COLUMNS = {
   Backlog: {
+    stage: 1,
     name: "Backlog",
     items: INTIAL_ITEMS,
   },
   ToDo: {
+    stage: 2,
     name: "To do",
     items: [],
   },
   Ongoing: {
+    stage: 3,
     name: "Ongoing",
     items: [],
   },
   Done: {
+    stage: 4,
     name: "Done",
     items: [],
   },
@@ -81,11 +126,20 @@ const kanban = createSlice({
     },
 
     addItem: (state, action) => {
-      state.columns.Backlog.items.unshift(action.payload);
+      const { name, deadline, priority } = action.payload;
+      const newTask = {
+        id: uuid(),
+        content: name,
+        deadline,
+        priority,
+      };
+      console.log(newTask);
+      state.columns.Backlog.items.unshift(newTask);
     },
 
     onItemAction: (state, action) => {
-      const { type, columnId, item } = action.payload;
+      const { type, columnId, stage, item } = action.payload;
+      console.log(stage);
       if (type === "DELETE") {
         const targetItemsList = state.columns[columnId].items;
         const itemIndex = targetItemsList.findIndex(
@@ -93,7 +147,11 @@ const kanban = createSlice({
         );
         targetItemsList.splice(itemIndex, 1);
       } else if (type === "BACK") {
+        const targetStage = stage - 1;
+        navigateTaskItem(state, columnId, item, targetStage);
       } else if (type === "FORWARD") {
+        const targetStage = stage + 1;
+        navigateTaskItem(state, columnId, item, targetStage);
       }
     },
   },

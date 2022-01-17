@@ -28,29 +28,13 @@ const { breakpoints, palette } = defaultTheme;
 
 let theme = {
   ...defaultTheme,
-  overrides: {
+  components: {
     MuiButton: {
-      root: {
-        background: "linear-gradient(0deg, #BD4CFF, #2B59F0)",
-        borderRadius: 10000,
-        color: "white",
-        fontWeight: 400,
-        letterSpacing: 0.2,
-        fontSize: "0.9rem",
-        padding: "0.6rem 2rem",
-        "& > span": {
-          zIndex: 1,
+      styleOverrides: {
+        root: {
+          background: "linear-gradient(0deg, #BD4CFF, #2B59F0)",
+          borderRadius: 20,
         },
-        "&::after": {
-          content: "''",
-          background: palette.primary.main,
-          position: "absolute",
-          inset: 3,
-          borderRadius: "inherit",
-        },
-      },
-      contained: {
-        color: "#FFFFFF",
       },
     },
     MuiContainer: {
