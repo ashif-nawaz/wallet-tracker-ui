@@ -19,15 +19,24 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthSlice, login, removemessage } from "../../store/auth";
+import ClientCaptcha from "react-client-captcha";
 import { INITIAL_VALUES, VALIDATION_SCHEMA } from "./config";
+import { useState } from "react";
 
 const Login = (props) => {
+  const [currentCaptcha, setCurrentCaptcha] = useState("");
+  const [invalidCaptcha, setInvalidCaptcha] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { ui, isAuth } = useSelector(getAuthSlice);
 
   const handleSubmit = (values, helpers) => {
-    dispatch(login(values));
+    setInvalidCaptcha(false);
+    if (currentCaptcha === values.captcha) {
+      dispatch(login(values));
+    } else {
+      setInvalidCaptcha(true);
+    }
   };
 
   useEffect(() => {
@@ -53,7 +62,7 @@ const Login = (props) => {
           Login
         </Typography>
 
-        <Collapse in={Boolean(ui.login.message)}>
+        <Collapse in={Boolean(ui.login.message) || invalidCaptcha}>
           <Alert
             severity="error"
             action={
@@ -70,7 +79,7 @@ const Login = (props) => {
             }
             sx={{ mb: 2, mt: 2, width: "100%" }}
           >
-            {ui.login.message}
+            {invalidCaptcha ? "Invalid Captcha" : ui.login.message}
           </Alert>
         </Collapse>
 
@@ -106,6 +115,29 @@ const Login = (props) => {
                 }
                 helperText={formik.touched.password && formik.errors.password}
               />
+              <Grid container>
+                <Grid item xs={12}>
+                  <ClientCaptcha
+                    captchaCode={(code) => setCurrentCaptcha(code)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    margin="normal"
+                    fullWidth
+                    id="captcha"
+                    name="captcha"
+                    label="Captcha*"
+                    type="text"
+                    value={formik.values.captcha}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.captcha && Boolean(formik.errors.captcha)
+                    }
+                    helperText={formik.touched.captcha && formik.errors.captcha}
+                  />
+                </Grid>
+              </Grid>
               <Button
                 type="submit"
                 fullWidth

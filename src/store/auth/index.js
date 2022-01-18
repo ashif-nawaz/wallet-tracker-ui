@@ -50,6 +50,12 @@ const auth = createSlice({
       const foundUser = state.users.find(
         (user) => user.email === actions.payload.email
       );
+      if (!foundUser) {
+        state.loggedInUser = {};
+        state.isAuth = false;
+        state.ui.login.message = "Please register yourself.";
+        return;
+      }
       if (foundUser && foundUser.password === actions.payload.password) {
         state.loggedInUser = actions.payload;
         state.isAuth = true;

@@ -7,6 +7,8 @@ import {
   Button,
   Modal,
   Chip,
+  Zoom,
+  Fab,
 } from "@mui/material";
 import {
   ArrowBackIos as ArrowBackIosIcon,
@@ -202,21 +204,28 @@ const Kanban = (props) => {
                                           }
                                         />
                                       </Box>
-                                      {snapshot.isDragging &&
-                                        createPortal(
-                                          <DeleteIcon
+                                      {createPortal(
+                                        <Zoom
+                                          in={snapshot.isDragging}
+                                          unmountOnExit
+                                        >
+                                          <Fab
                                             sx={{
                                               position: "absolute",
-                                              right: "5vw",
-                                              bottom: "10vh",
+                                              bottom: "7vh",
+                                              right: "6vw",
+                                              color: "common.white",
+                                              bgcolor: "primary.main",
+                                              "&:hover": {
+                                                bgcolor: "primary.secondary",
+                                              },
                                             }}
-                                            color="error"
-                                            fontSize="large"
-                                          />,
-                                          document.getElementsByTagName(
-                                            "body"
-                                          )[0]
-                                        )}
+                                          >
+                                            <DeleteIcon fontSize="large" />
+                                          </Fab>
+                                        </Zoom>,
+                                        document.getElementsByTagName("body")[0]
+                                      )}
                                     </Paper>
                                   );
                                 }}
@@ -294,3 +303,18 @@ const Kanban = (props) => {
 };
 
 export default Kanban;
+// {snapshot.isDragging &&
+//   createPortal(
+//     <DeleteIcon
+//       sx={{
+//         position: "absolute",
+//         right: "5vw",
+//         bottom: "10vh",
+//       }}
+//       color="error"
+//       fontSize="large"
+//     />,
+//     document.getElementsByTagName(
+//       "body"
+//     )[0]
+//   )}

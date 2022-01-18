@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import store from "./store";
 import "./index.css";
 import App from "./App";
-
+import "react-client-captcha/dist/index.css";
 import "@fontsource/sora";
 import { ThemeProvider } from "@mui/system";
 import theme from "./theme";
