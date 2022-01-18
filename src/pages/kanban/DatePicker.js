@@ -3,14 +3,14 @@ import { LocalizationProvider, DateTimePicker } from "@mui/lab";
 import { TextField } from "@mui/material";
 import { useFormikContext } from "formik";
 
-const DatePicker = (props) => {
+const DatePicker = ({ editable }) => {
   const formik = useFormikContext();
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateTimePicker
         label="Deadline"
         name="deadline"
-        value={formik.values.deadline}
+        value={editable ? editable.item.deadline : formik.values.deadline}
         onChange={(value) => {
           formik.setFieldValue("deadline", value.toISOString());
         }}

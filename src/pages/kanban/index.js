@@ -20,9 +20,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getKanbanSlice, updateColumn, onItemAction } from "../../store/kanban";
 import { COLUMN_COLOR_ENUM } from "../dashboard/config";
 import AddTask from "./AddTask";
+import { createPortal } from "react-dom";
 
 const Kanban = (props) => {
   const [open, setOpen] = useState(false);
+  const [editable, setEditable] = useState(null);
   const dispatch = useDispatch();
   const { columns } = useSelector(getKanbanSlice);
 
@@ -49,8 +51,12 @@ const Kanban = (props) => {
         Create Task
       </Button>
 
-      <Grid container spacing={2} justifyContent="space-around">
-        <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+      <DragDropContext
+        onDragEnd={(result) => {
+          onDragEnd(result);
+        }}
+      >
+        <Grid container spacing={2} justifyContent="space-around">
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
               <Grid item xs={12} sm={3} key={columnId} alignContent="center">
@@ -77,6 +83,19 @@ const Kanban = (props) => {
                           }}
                         >
                           {column.items.map((item, index) => {
+                            const date = new Date(item.deadline);
+                            const day = date.toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                            });
+                            const time = date.toLocaleTimeString(
+                              navigator.language,
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            );
                             return (
                               <Draggable
                                 key={item.id}
@@ -112,19 +131,20 @@ const Kanban = (props) => {
                                           mb: 2,
                                         }}
                                       >
-                                        <Typography
-                                          component="p"
-                                          variant="body1"
-                                        >
-                                          {item.content}
-                                        </Typography>
-
+                                        <Chip
+                                          label={`${day} | ${time}`}
+                                          size="small"
+                                          color="default"
+                                        />
                                         <Chip
                                           label={item.priority.toUpperCase()}
                                           size="small"
                                           color="info"
                                         />
                                       </Box>
+                                      <Typography component="p" variant="body1">
+                                        {item.content}
+                                      </Typography>
                                       <Box
                                         component="div"
                                         sx={{
@@ -164,14 +184,10 @@ const Kanban = (props) => {
                                         <EditIcon
                                           fontSize="small"
                                           sx={{ ml: 1, cursor: "pointer" }}
-                                          onClick={(e) =>
-                                            handleActions(
-                                              columnId,
-                                              column.stage,
-                                              item,
-                                              "EDIT"
-                                            )
-                                          }
+                                          onClick={(e) => {
+                                            setEditable({ columnId, item });
+                                            handleCreateTaskModalToggle();
+                                          }}
                                         />
                                         <DeleteIcon
                                           fontSize="small"
@@ -186,6 +202,21 @@ const Kanban = (props) => {
                                           }
                                         />
                                       </Box>
+                                      {snapshot.isDragging &&
+                                        createPortal(
+                                          <DeleteIcon
+                                            sx={{
+                                              position: "absolute",
+                                              right: "5vw",
+                                              bottom: "10vh",
+                                            }}
+                                            color="error"
+                                            fontSize="large"
+                                          />,
+                                          document.getElementsByTagName(
+                                            "body"
+                                          )[0]
+                                        )}
                                     </Paper>
                                   );
                                 }}
@@ -201,8 +232,36 @@ const Kanban = (props) => {
               </Grid>
             );
           })}
-        </DragDropContext>
-      </Grid>
+        </Grid>
+
+        <div>
+          <Droppable droppableId="delete">
+            {(provided, snapshot) => {
+              // eslint-disable-next-line react-hooks/rules-of-hooks
+
+              return (
+                <Box
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  sx={{
+                    maxWidth: "40px",
+                    maxHeight: "40px",
+                    position: "fixed",
+                    visibility: "hidden",
+                    right: "10vw",
+                    bottom: "10vh",
+                    padding: 0,
+                  }}
+                >
+                  <DeleteIcon fontSize="large" />
+
+                  {provided.placeholder}
+                </Box>
+              );
+            }}
+          </Droppable>
+        </div>
+      </DragDropContext>
 
       <Modal
         open={open}
@@ -223,7 +282,11 @@ const Kanban = (props) => {
             p: 4,
           }}
         >
-          <AddTask toggleModal={handleCreateTaskModalToggle} />
+          <AddTask
+            toggleModal={handleCreateTaskModalToggle}
+            editable={editable}
+            setEditable={setEditable}
+          />
         </Box>
       </Modal>
     </Container>

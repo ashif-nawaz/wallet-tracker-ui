@@ -91,6 +91,10 @@ const kanban = createSlice({
   reducers: {
     updateColumn: (state, action) => {
       const { source, destination } = action.payload;
+      if (destination.droppableId === "delete") {
+        state.columns[source.droppableId].items.splice(destination.index, 1);
+        return;
+      }
 
       if (source.droppableId !== destination.droppableId) {
         const sourceColumn = state.columns[source.droppableId];
@@ -126,15 +130,30 @@ const kanban = createSlice({
     },
 
     addItem: (state, action) => {
-      const { name, deadline, priority } = action.payload;
+      const { name, deadline, priority, columnId } = action.payload;
       const newTask = {
         id: uuid(),
         content: name,
         deadline,
         priority,
       };
-      console.log(newTask);
       state.columns.Backlog.items.unshift(newTask);
+    },
+
+    editItem: (state, action) => {
+      const { name, deadline, priority, columnId, id } = action.payload;
+      const newTask = {
+        id: id,
+        content: name,
+        deadline,
+        priority,
+      };
+
+      const itemIndex = state.columns[columnId].items.findIndex(
+        (item) => item.id === id
+      );
+
+      state.columns[columnId].items.splice(itemIndex, 1, newTask);
     },
 
     onItemAction: (state, action) => {
@@ -161,7 +180,7 @@ const kanban = createSlice({
 });
 
 const getKanbanSlice = (state) => state.kanban;
-const { updateColumn, onItemAction, addItem } = kanban.actions;
+const { updateColumn, onItemAction, addItem, editItem } = kanban.actions;
 
-export { getKanbanSlice, updateColumn, onItemAction, addItem };
+export { getKanbanSlice, updateColumn, onItemAction, addItem, editItem };
 export default kanban.reducer;
