@@ -18,21 +18,21 @@ import { Form, Formik } from "formik";
 import { INITIAL_VALUES, VALIDATION_SCHEMA } from "./config";
 import DatePicker from "./DatePicker";
 import { useDispatch } from "react-redux";
-import { addItem, editItem } from "../../store/kanban";
+import { expenseAdd, expenseEdit } from "../../store/expense";
 import { useEffect, useState } from "react";
 
-const AddTask = ({ editable, setEditable }) => {
+const AddExpense = ({ editable, setEditable }) => {
   const dispatch = useDispatch();
 
   const handleSubmit = (values, helpers) => {
     helpers.resetForm();
-    if (values.id) {
-      dispatch(editItem(values));
+    if (editable) {
+      console.log(editable);
+      dispatch(expenseEdit({ ...values, _id: editable._id }));
       setEditable(null);
     } else {
-      dispatch(addItem(values));
+      dispatch(expenseAdd(values));
     }
-    // props.toggleModal();
   };
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const AddTask = ({ editable, setEditable }) => {
           <PendingActionsIcon sx={{ color: "secondary.contrastText" }} />
         </Avatar>
         <Typography component="h1" variant="h5" gutterBottom>
-          Create Task
+          Add Expense
         </Typography>
         {/* <Collapse in={Boolean(ui.signup.message)}>
         <Alert
@@ -92,11 +92,10 @@ const AddTask = ({ editable, setEditable }) => {
             useEffect(() => {
               if (editable) {
                 formik.setValues({
-                  name: editable.item.content,
-                  deadline: editable.item.deadline,
-                  priority: editable.item.priority,
-                  columnId: editable.columnId,
-                  id: editable.item.id,
+                  title: editable.title,
+                  date: editable.date,
+                  description: editable.description,
+                  amount: editable.amount,
                 });
               }
 
@@ -110,21 +109,56 @@ const AddTask = ({ editable, setEditable }) => {
                     <TextField
                       margin="normal"
                       fullWidth
-                      id="name"
-                      name="name"
-                      label="Task Name*"
-                      value={formik.values.name}
+                      id="title"
+                      name="title"
+                      label="Expense Title*"
+                      value={formik.values.title}
                       onChange={formik.handleChange}
-                      error={formik.touched.name && Boolean(formik.errors.name)}
-                      helperText={formik.touched.name && formik.errors.name}
+                      error={
+                        formik.touched.title && Boolean(formik.errors.title)
+                      }
+                      helperText={formik.touched.title && formik.errors.title}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      id="amount"
+                      name="amount"
+                      label="Expense amount*"
+                      value={formik.values.amount}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.amount && Boolean(formik.errors.amount)
+                      }
+                      helperText={formik.touched.amount && formik.errors.amount}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      id="description"
+                      name="description"
+                      label="Expense description*"
+                      value={formik.values.description}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.description &&
+                        Boolean(formik.errors.description)
+                      }
+                      helperText={
+                        formik.touched.description && formik.errors.description
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <DatePicker />
                   </Grid>
 
-                  <Grid item xs={12}>
-                    <Typography color="textSecondary">Priority</Typography>
+                  {/* <Grid item xs={12}>
+                    <Typography color="textSecondary"></Typography>
                     <ToggleButtonGroup
                       name="priority"
                       color="secondary"
@@ -139,7 +173,7 @@ const AddTask = ({ editable, setEditable }) => {
                       <ToggleButton value="medium">Medium</ToggleButton>
                       <ToggleButton value="low">Low</ToggleButton>
                     </ToggleButtonGroup>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
                 <Button
                   type="submit"
@@ -147,7 +181,7 @@ const AddTask = ({ editable, setEditable }) => {
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {editable ? "Update Task" : "Create Task"}
+                  {editable ? "Update Expense" : "Create Expense"}
                 </Button>
               </Form>
             );
@@ -158,4 +192,4 @@ const AddTask = ({ editable, setEditable }) => {
   );
 };
 
-export default AddTask;
+export default AddExpense;

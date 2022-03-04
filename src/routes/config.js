@@ -2,7 +2,7 @@ import { lazy } from "react";
 
 const Login = lazy(() => import("../pages/login"));
 const Signup = lazy(() => import("../pages/signup"));
-const Kanban = lazy(() => import("../pages/kanban"));
+const Expense = lazy(() => import("../pages/expense"));
 const Dashboard = lazy(() => import("../pages/dashboard"));
 
 const ROUTES_CONFIG = [
@@ -30,8 +30,8 @@ const ROUTES_CONFIG = [
   },
   {
     id: "page_4",
-    path: "/tasks",
-    component: <Kanban />,
+    path: "/expenses",
+    component: <Expense />,
     exact: true,
     authGuard: true,
     redirect: "/",

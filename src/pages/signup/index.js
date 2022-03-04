@@ -18,7 +18,7 @@ import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuthSlice, removemessage, signup } from "../../store/auth";
+import { getAuthSlice, removemessage, postSignup } from "../../store/auth";
 import { INITIAL_VALUES, VALIDATION_SCHEMA } from "./config";
 
 const Signup = (props) => {
@@ -27,7 +27,8 @@ const Signup = (props) => {
   const { ui, isAuth } = useSelector(getAuthSlice);
 
   const handleSubmit = (values, helpers) => {
-    dispatch(signup(values));
+    console.log(values);
+    dispatch(postSignup(values));
   };
 
   useEffect(() => {
@@ -100,7 +101,7 @@ const Signup = (props) => {
                     helperText={formik.touched.name && formik.errors.name}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                   <TextField
                     margin="normal"
                     fullWidth
@@ -116,7 +117,7 @@ const Signup = (props) => {
                       formik.touched.username && formik.errors.username
                     }
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={6}>
                   <TextField
                     margin="normal"
@@ -130,7 +131,7 @@ const Signup = (props) => {
                     helperText={formik.touched.email && formik.errors.email}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                   <TextField
                     margin="normal"
                     fullWidth
@@ -144,7 +145,7 @@ const Signup = (props) => {
                     }
                     helperText={formik.touched.number && formik.errors.number}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12}>
                   <TextField
                     margin="normal"

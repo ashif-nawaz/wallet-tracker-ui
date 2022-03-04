@@ -47,7 +47,7 @@ const Header = (props) => {
             sx={{ color: (theme) => theme.palette.primary.contrastText }}
             underline="none"
           >
-            Kanban
+            Wallet Tracker
           </Link>
         </Typography>
 

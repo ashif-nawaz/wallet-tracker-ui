@@ -4,9 +4,7 @@ const phoneRegExp =
 
 const INITIAL_VALUES = {
   name: "Ashif Nawaz",
-  username: "ashif",
   email: "test@test.com",
-  number: "9876543210",
   password: "Test@123",
 };
 
@@ -14,16 +12,11 @@ const VALIDATION_SCHEMA = Yup.object({
   name: Yup.string()
     .min(3, "At least 3 character or more")
     .required("Name is required"),
-  username: Yup.string()
-    .min(3, "At least 3 character or more")
-    .required("Username is required"),
+
   email: Yup.string()
     .email("Please enter a valid user email")
     .required("Email is required."),
-  number: Yup.string()
-    .optional()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .min(10, "Phone number should be 10 digits"),
+
   password: Yup.string()
     .required("Password is required")
     .matches(

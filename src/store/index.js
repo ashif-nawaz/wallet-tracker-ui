@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import auth from "./auth";
-import kanban from "./kanban";
+import expense from "./expense";
 
 const store = configureStore({
   reducer: {
     auth,
-    kanban,
+    expense,
   },
 });
 

@@ -8,11 +8,11 @@ const DatePicker = ({ editable }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateTimePicker
-        label="Deadline"
-        name="deadline"
-        value={editable ? editable.item.deadline : formik.values.deadline}
+        label="date"
+        name="date"
+        value={editable ? editable.date : formik.values.date}
         onChange={(value) => {
-          formik.setFieldValue("deadline", value.toISOString());
+          formik.setFieldValue("date", value.toISOString());
         }}
         renderInput={(params) => (
           <TextField {...params} fullWidth margin="normal" />

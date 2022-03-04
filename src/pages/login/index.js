@@ -18,7 +18,7 @@ import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuthSlice, login, removemessage } from "../../store/auth";
+import { getAuthSlice, postLogin, removemessage } from "../../store/auth";
 import ClientCaptcha from "react-client-captcha";
 import { INITIAL_VALUES, VALIDATION_SCHEMA } from "./config";
 import { useState } from "react";
@@ -33,7 +33,7 @@ const Login = (props) => {
   const handleSubmit = (values, helpers) => {
     setInvalidCaptcha(false);
     if (currentCaptcha === values.captcha) {
-      dispatch(login(values));
+      dispatch(postLogin(values));
     } else {
       setInvalidCaptcha(true);
     }
